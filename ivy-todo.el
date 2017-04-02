@@ -165,6 +165,26 @@ HEADLINE is a string or a cons (\"headline\" . buffer-pos)."
         (org-archive-subtree)
         (save-buffer)))))
 
+(defun ivy-todo-clock-in (headline)
+  "Goto HEADLINE in `ivy-todo-file' and call `org-clock-in'.
+HEADLINE is a string or a cons(\"headline\" . buffer-pos)."
+  (let ((headline-pos (cdr ivy-todo-headline)))
+    (delay-mode-hooks
+      (with-current-buffer (find-file-noselect ivy-todo-file)
+        (ivy-todo--old-or-new-item headline headline-pos)
+        (org-clock-in)
+        (save-buffer)))))
+
+(defun ivy-todo-clock-out (headline)
+  "Goto HEADLINE in `ivy-todo-file' and call `org-clock-out'.
+HEADLINE is a string or a cons(\"headline\" . buffer-pos)."
+  (let ((headline-pos (cdr ivy-todo-headline)))
+    (delay-mode-hooks
+      (with-current-buffer (find-file-noselect ivy-todo-file)
+        (ivy-todo--old-or-new-item headline headline-pos)
+        (org-clock-out)
+        (save-buffer)))))
+
 (defun ivy-todo-set-priority (headline)
   "Goto HEADLINE in `ivy-todo-file' and call `org-priority'.
 HEADLINE is a string or a cons (\"headline\" . buffer-pos)."
@@ -220,6 +240,8 @@ HEADLINE is a string or a cons (\"headline\" . buffer-pos)."
  '(("," ivy-todo-set-priority "priority")
    ("a" ivy-todo-archive "archive")
    ("e" ivy-todo-set-effort "effort")
+   ("i" ivy-todo-clock-in "clock-in")
+   ("o" ivy-todo-clock-out "clock-out")
    ("p" ivy-todo-set-property "property")
    ("r" ivy-todo-refile "refile")
    ("t" ivy-todo-set-tags "tags")))
